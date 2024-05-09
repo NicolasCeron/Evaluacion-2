@@ -22,10 +22,9 @@ public class Garaje implements iGarage {
     public void alquilarEspacio(Vehiculo vehiculo) {
         // Verificar si hay espacios disponibles
         if (hayEspacioDisponible()) {
-            // Verificar si el vehículo tiene matrícula
-            if (vehiculo.getPlaca() != null) {
+           
                 // Verificar si hay más del 80% de espacios ocupados por motos
-                if (calcularOcupacionPorTipoVehiculo(new Moto()) <= 0.8 * getCantidadOcupados()) {
+                if (calcularOcupacionPorTipoVehiculo(new Moto(true, "Suzuki", 8000, 125)) <= 0.8 * getCantidadOcupados()) {
                     // Buscar un espacio libre y asignar el vehículo
                     for (int i = 0; i < espacios.length; i++) {
                         if (espacios[i] == null) {
@@ -37,12 +36,27 @@ public class Garaje implements iGarage {
                 } else {
                     System.out.println("Error: No se pueden ocupar más del 80% de los espacios con motos.");
                 }
-            } else {
-                System.out.println("Error: El vehículo no tiene matrícula. No se puede alquilar.");
-            }
+            
         } else {
             System.out.println("Error: No hay espacios disponibles en el garaje.");
         }
+        //Asignar espacios para las camionetas
+        if (vehiculo instanceof Camioneta) {
+        Camioneta camioneta = (Camioneta) vehiculo;
+        if (camioneta.getTipo().equalsIgnoreCase("carga") || camioneta.getTipo().equalsIgnoreCase("otro")) {
+            int espaciosOcupadosPorCamionetasCargaOtro = 0;
+            for (Vehiculo espacio : espacios) {
+                if (espacio instanceof Camioneta && 
+                        (espacio.getTipo.equalsIgnoreCase("carga") || espacio.getTipo().equalsIgnoreCase("otro"))) {
+                    espaciosOcupadosPorCamionetasCargaOtro++;
+                }
+            }
+            if (espaciosOcupadosPorCamionetasCargaOtro >= espacios.length * 0.1) {
+                System.out.println("Error: No se pueden alquilar más espacios para camionetas de tipo 'Carga' u 'Otro'.");
+                return;
+            }
+        }
+    }
     }
 
     // Método para verificar si hay espacio disponible
@@ -117,4 +131,40 @@ public class Garaje implements iGarage {
             menu.ejecutarOpcion(opcionMenu);
         } while (opcionMenu != 0);
     }
+    
+    //Metodo Nuevo para consultar la proporcion de los autos
+    public double consultarProporcionAutosMotos() {
+    int totalVehiculos = 0;
+    int autos = 0;
+    int motos = 0;
+    int camionetas = 0;
+
+    for (Vehiculo vehiculo : espacios) {
+        if (vehiculo != null) {
+            totalVehiculos++;
+            if (vehiculo instanceof Auto) {
+                autos++;
+            } else if (vehiculo instanceof Moto) {
+                motos++;
+            } else if (vehiculo instanceof Camioneta) {
+                camionetas++;
+            }
+        }
+    }
+
+    if (totalVehiculos == 0) {
+        System.out.println("No hay vehículos en el garaje para calcular la proporción.");
+        return 0;
+    }
+
+    double proporcionAutos = (double) autos / totalVehiculos * 100;
+    double proporcionMotos = (double) motos / totalVehiculos * 100;
+    double proporcionCamionetas = (double) camionetas / totalVehiculos * 100;
+
+    System.out.println("Proporción Autos: " + String.format("2f", proporcionAutos) + "%");
+    System.out.println("Proporción Motos: " + String.format("2f", proporcionMotos) + "%");
+    System.out.println("Proporción Camionetas: " + String.format("2f", proporcionCamionetas) + "%");
+
+    return proporcionAutos; // Puede devolver la proporción que desee
+}
 }

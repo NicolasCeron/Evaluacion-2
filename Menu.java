@@ -12,7 +12,7 @@ public class Menu {
     }
 
     public void mostrarMenu() {
-        System.out.println("\n**Menú de gestión del Garaje**");
+        System.out.println("Menu de gestión del Garaje");
         System.out.println("1. Alquilar un espacio");
         System.out.println("2. Retirar vehículo");
         System.out.println("3. Consulta de ingresos mensuales");
@@ -93,8 +93,8 @@ public class Menu {
     }
 
     private void consultarProporcionAutosMotos() {
-        int ocupacionAutos = garaje.calcularOcupacionPorTipoVehiculo(new Auto());
-        int ocupacionMotos = garaje.calcularOcupacionPorTipoVehiculo(new Moto());
+        int ocupacionAutos = garaje.calcularOcupacionPorTipoVehiculo(new Auto("Toyota", 25000, 1800, true, false));
+        int ocupacionMotos = garaje.calcularOcupacionPorTipoVehiculo(new Moto(true, "Suzuki", 8000, 125));
         double proporcion = (double) ocupacionAutos / ocupacionMotos;
         System.out.println("Proporción autos / motos: " + proporcion);
     }
